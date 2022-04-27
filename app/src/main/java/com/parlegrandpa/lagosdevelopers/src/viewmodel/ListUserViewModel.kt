@@ -5,11 +5,13 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.parlegrandpa.lagosdevelopers.src.di.DaggerApiComponent
-import com.parlegrandpa.lagosdevelopers.src.model.*
+import com.parlegrandpa.lagosdevelopers.src.data.db.UserItemDatabase
+import com.parlegrandpa.lagosdevelopers.src.data.model.User
+import com.parlegrandpa.lagosdevelopers.src.data.model.UserItem
+import com.parlegrandpa.lagosdevelopers.src.data.service.UsersService
 import com.parlegrandpa.lagosdevelopers.src.util.SharedPreferencesHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
@@ -24,11 +26,10 @@ class ListUserViewModel(application: Application) : ViewModel() {
         DaggerApiComponent.create().inject(this)
     }
 
-    private val refreshTime: Long = 5 * 60 * 1000 * 1000 * 1000L
+    private val refreshTime: Long = 24 * 60 * 1000 * 1000 * 1000L
 
     private val disposable = CompositeDisposable()
 
-    private var userList = ArrayList<UserItem>()
     private val userItemDatabase = UserItemDatabase.getInstance(application)
     private var sharedPreferencesHelper: SharedPreferencesHelper = SharedPreferencesHelper(application)
 
@@ -36,39 +37,33 @@ class ListUserViewModel(application: Application) : ViewModel() {
     val usersLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
 
-    fun refresh(pathId: Int, showLoader: Boolean) {
+    fun refresh(forceLoadFromRemote: Boolean) {
         val updateTime = sharedPreferencesHelper.getUpdateTime()
         val currentTime = System.nanoTime()
 
-        if (updateTime != null) {
-            if (updateTime > 0.0 && currentTime - updateTime < refreshTime) {
-                fetchUsersFromDatabase()
-            } else {
-                fetchUsersFromRemote(pathId, showLoader)
-            }
+        if (forceLoadFromRemote) {
+            fetchUsersFromRemote()
         } else {
-            fetchUsersFromRemote(pathId, showLoader)
+            if (updateTime != null) {
+                if (updateTime > 0.0 && currentTime - updateTime < refreshTime) {
+                    fetchUsersFromDatabase()
+                } else {
+                    fetchUsersFromRemote()
+                }
+            } else {
+                fetchUsersFromRemote()
+            }
         }
     }
 
-    private fun fetchUsersFromRemote(pathId: Int, showLoader: Boolean) {
-        loading.value = showLoader
+    fun fetchUsersFromRemote() {
+        loading.value = true
         disposable.add(
-            usersService.getUsers(pathId)
+            usersService.getUsers(1)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<User>() {
                     override fun onSuccess(value: User) {
-//                        userList = value.userItems as ArrayList<UserItem>
-//
-//                        if (!showLoader) {
-//                            users.value = userList
-//                        } else {
-//                            users.value = value.userItems
-//                        }
-//                        usersLoadError.value = false
-//                        loading.value = false
-
                         value.userItems?.let {
                             insertUsersFromDatabase(it)
                             sharedPreferencesHelper.saveUpdateTime(System.nanoTime())

@@ -1,17 +1,20 @@
-package com.parlegrandpa.lagosdevelopers.src.view
+package com.parlegrandpa.lagosdevelopers.src.view.screens
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.parlegrandpa.lagosdevelopers.R
-import com.parlegrandpa.lagosdevelopers.src.model.UserItemViewModelFactory
+import com.parlegrandpa.lagosdevelopers.src.data.factory.UserItemViewModelFactory
 import com.parlegrandpa.lagosdevelopers.src.view.adapter.UserListAdapter
 import com.parlegrandpa.lagosdevelopers.src.viewmodel.ListUserViewModel
+import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.favoriteButton
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,13 +28,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportActionBar?.hide()
+
         initView()
     }
 
     override fun onResume() {
         super.onResume()
 
-        fetchUsers(1, true)
+        fetchUsers( false)
     }
 
     fun initView() {
@@ -46,41 +51,20 @@ class MainActivity : AppCompatActivity() {
         favoriteButton.setOnClickListener { startActivity(Intent(this, FavoriteListActivity::class.java)) }
 
         initSwipeToRefresh()
-//        initNestedSV()
 
         observeViewModel()
     }
 
     fun initSwipeToRefresh() {
         refreshLayout.setOnRefreshListener {
-            fetchUsers(1, true)
+            fetchUsers(true)
         }
     }
 
-    fun fetchUsers(count: Int, showLoader: Boolean) {
+    fun fetchUsers(forceLoadFromRemote: Boolean) {
         refreshLayout.isRefreshing = false
-        viewModel.refresh(count, showLoader)
+        viewModel.refresh(forceLoadFromRemote)
     }
-
-//    fun initNestedSV() {
-//        nestedSV.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-//            // on scroll change we are checking when users scroll as bottom.
-//            if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
-//                // in this method we are incrementing page number,
-//                // making progress bar visible and calling get data method.
-//                count++
-//                Log.e("DEDWDW", ""+count)
-//                // on below line we are making our progress bar visible.
-////                pBLoading.visibility(View.VISIBLE)
-//                if (count < 20) {
-//                    refreshLayout.isRefreshing = true
-//                    // on below line we are again calling
-//                    // a method to load data in our array list.
-//                    fetchUsers(2, false)
-//                }
-//            }
-//        })
-//    }
 
     fun observeViewModel() {
         viewModel.users.observe(this, Observer { users ->

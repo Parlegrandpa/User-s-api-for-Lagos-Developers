@@ -1,9 +1,10 @@
-package com.parlegrandpa.lagosdevelopers.src.model
+package com.parlegrandpa.lagosdevelopers.src.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.parlegrandpa.lagosdevelopers.src.data.model.UserItem
 
 @Database(entities = [UserItem::class], version = 1, exportSchema = false)
 abstract class UserItemDatabase: RoomDatabase() {

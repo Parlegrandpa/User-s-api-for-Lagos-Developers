@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".src.view.FavoriteListActivity">
+    tools:context=".src.view.screens.FavoriteListActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -16,11 +16,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/backArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/arrow"
+                android:rotation="180"
+                android:contentDescription="@null" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Favourite List"
+                android:text="@string/favourite_list"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"/>
@@ -35,7 +45,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
-                android:text="Delete All" />
+                android:text="@string/delete_all" />
 
         </RelativeLayout>
 

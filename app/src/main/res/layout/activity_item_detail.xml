@@ -8,16 +8,38 @@
     android:gravity="center_horizontal">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:minHeight="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:theme="@style/ToolBarStyle" />
+        android:background="@color/purple_500">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/backArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/arrow"
+                android:rotation="180"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/favourite_list"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
+
+        </RelativeLayout>
+
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/imageView"

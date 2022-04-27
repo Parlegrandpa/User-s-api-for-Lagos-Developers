@@ -1,11 +1,11 @@
-package com.parlegrandpa.lagosdevelopers.src.view
+package com.parlegrandpa.lagosdevelopers.src.view.screens
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.parlegrandpa.lagosdevelopers.R
-import com.parlegrandpa.lagosdevelopers.src.model.UserItemDetailModelFactory
+import com.parlegrandpa.lagosdevelopers.src.data.factory.UserItemDetailModelFactory
 import com.parlegrandpa.lagosdevelopers.src.util.getProgressDrawable
 import com.parlegrandpa.lagosdevelopers.src.util.loadImage
 import com.parlegrandpa.lagosdevelopers.src.viewmodel.UserItemDetailViewModel
@@ -16,7 +16,7 @@ class ItemDetailActivity : AppCompatActivity() {
     lateinit var viewModel: UserItemDetailViewModel
 
     var userItemId: Int = 0
-    var is_favorite: Boolean = false
+    private var isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,13 +26,9 @@ class ItemDetailActivity : AppCompatActivity() {
     }
 
     private fun initActionBar(titleText: String) {
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            title = titleText
-
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
+        supportActionBar?.hide()
+        toolbar_title.text = titleText
+        backArrow.setOnClickListener { finish() }
     }
 
     private fun initView() {
@@ -44,7 +40,7 @@ class ItemDetailActivity : AppCompatActivity() {
 
         viewModel.refresh(userItemId)
 
-        favoriteButton.setOnClickListener { viewModel.updateFavorite(userItemId, !is_favorite) }
+        favoriteButton.setOnClickListener { viewModel.updateFavorite(userItemId, !isFavorite) }
 
         observeViewModel()
     }
@@ -62,7 +58,7 @@ class ItemDetailActivity : AppCompatActivity() {
 
                 user.login?.let { initActionBar(it) }
 
-                is_favorite = user.is_favorite!!
+                isFavorite = user.is_favorite
                 changeButtonText()
             }
         }
@@ -70,7 +66,7 @@ class ItemDetailActivity : AppCompatActivity() {
         viewModel.isUpdated.observe(this) { isUpdated ->
             run {
                 if (isUpdated) {
-                    is_favorite = !is_favorite
+                    isFavorite = !isFavorite
 //                    changeButtonText()
                     displayToast()
                 }
@@ -78,18 +74,26 @@ class ItemDetailActivity : AppCompatActivity() {
         }
     }
 
-    fun changeButtonText() {
-        if (is_favorite)
+    private fun changeButtonText() {
+        if (isFavorite)
             favoriteButton.text = resources.getText(R.string.remote_from_favorite)
         else
             favoriteButton.text = resources.getText(R.string.add_to_favorite)
     }
 
     private fun displayToast() {
-        if (is_favorite)
-            Toast.makeText(this, "Item has been added to favorite list successfully", Toast.LENGTH_LONG).show()
+        if (isFavorite)
+            Toast.makeText(
+                this,
+                "Item has been added to favorite list successfully",
+                Toast.LENGTH_LONG
+            ).show()
         else
-            Toast.makeText(this, "Item has been removed from favorite list successfully", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Item has been removed from favorite list successfully",
+                Toast.LENGTH_LONG
+            ).show()
 
         finish()
     }

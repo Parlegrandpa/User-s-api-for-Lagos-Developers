@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.parlegrandpa.lagosdevelopers.R
-import com.parlegrandpa.lagosdevelopers.src.model.UserItem
+import com.parlegrandpa.lagosdevelopers.src.data.model.UserItem
 import com.parlegrandpa.lagosdevelopers.src.util.loadImage
 import com.parlegrandpa.lagosdevelopers.src.util.getProgressDrawable
-import com.parlegrandpa.lagosdevelopers.src.view.ItemDetailActivity
+import com.parlegrandpa.lagosdevelopers.src.view.screens.ItemDetailActivity
 import kotlinx.android.synthetic.main.item_user.view.*
 
 class UserListAdapter(var context: Context, var users: ArrayList<UserItem>): RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {

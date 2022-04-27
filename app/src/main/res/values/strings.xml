@@ -6,4 +6,6 @@
     <string name="add_to_favorite">Add to favorite</string>
     <string name="dialogTitle">Delete List</string>
     <string name="dialogMessage">Are you sure you want to delete all favorite list</string>
+    <string name="favourite_list">Favourite List</string>
+    <string name="delete_all">Delete All</string>
 </resources>

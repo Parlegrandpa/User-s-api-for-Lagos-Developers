@@ -1,5 +1,7 @@
-package com.parlegrandpa.lagosdevelopers.src.model
+package com.parlegrandpa.lagosdevelopers.src.data.repository
 
+import com.parlegrandpa.lagosdevelopers.src.data.model.UserItem
+import com.parlegrandpa.lagosdevelopers.src.data.db.UserItemDao
 import javax.inject.Inject
 
 class UserItemRepository @Inject constructor(private val userItemDao: UserItemDao) {

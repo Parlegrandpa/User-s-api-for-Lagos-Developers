@@ -1,4 +1,4 @@
-package com.parlegrandpa.lagosdevelopers.src.model
+package com.parlegrandpa.lagosdevelopers.src.data.model
 
 import com.google.gson.annotations.SerializedName
 

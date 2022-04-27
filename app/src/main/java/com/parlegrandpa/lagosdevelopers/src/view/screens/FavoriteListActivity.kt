@@ -1,4 +1,4 @@
-package com.parlegrandpa.lagosdevelopers.src.view
+package com.parlegrandpa.lagosdevelopers.src.view.screens
 
 import android.os.Bundle
 import android.view.View
@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.parlegrandpa.lagosdevelopers.R
-import com.parlegrandpa.lagosdevelopers.src.model.UserItemViewModelFactory
+import com.parlegrandpa.lagosdevelopers.src.data.factory.UserItemViewModelFactory
 import com.parlegrandpa.lagosdevelopers.src.view.adapter.UserListAdapter
 import com.parlegrandpa.lagosdevelopers.src.viewmodel.ListUserViewModel
 import kotlinx.android.synthetic.main.activity_favorite_list.*
@@ -20,6 +20,8 @@ class FavoriteListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_list)
+
+        supportActionBar?.hide()
 
         initView()
     }
@@ -39,6 +41,7 @@ class FavoriteListActivity : AppCompatActivity() {
             adapter = usersAdapter
         }
 
+        backArrow.setOnClickListener { finish() }
         removeAllButton.setOnClickListener { showDeleteWarning() }
 
         observeViewModel()

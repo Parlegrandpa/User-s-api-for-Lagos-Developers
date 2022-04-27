@@ -4,8 +4,8 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.parlegrandpa.lagosdevelopers.src.model.UserItem
-import com.parlegrandpa.lagosdevelopers.src.model.UserItemDatabase
+import com.parlegrandpa.lagosdevelopers.src.data.model.UserItem
+import com.parlegrandpa.lagosdevelopers.src.data.db.UserItemDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel

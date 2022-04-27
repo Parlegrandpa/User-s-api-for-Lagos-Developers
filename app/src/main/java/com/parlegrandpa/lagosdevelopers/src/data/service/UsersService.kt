@@ -1,5 +1,6 @@
-package com.parlegrandpa.lagosdevelopers.src.model
+package com.parlegrandpa.lagosdevelopers.src.data.service
 
+import com.parlegrandpa.lagosdevelopers.src.data.model.User
 import com.parlegrandpa.lagosdevelopers.src.di.DaggerApiComponent
 import io.reactivex.Single
 import javax.inject.Inject

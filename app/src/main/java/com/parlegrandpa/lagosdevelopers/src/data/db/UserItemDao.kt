@@ -1,8 +1,9 @@
-package com.parlegrandpa.lagosdevelopers.src.model
+package com.parlegrandpa.lagosdevelopers.src.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.parlegrandpa.lagosdevelopers.src.data.model.UserItem
 
 @Dao
 interface UserItemDao {
