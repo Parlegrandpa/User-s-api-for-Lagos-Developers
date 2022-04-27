@@ -1,7 +1,6 @@
 package com.parlegrandpa.lagosdevelopers.src.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.parlegrandpa.lagosdevelopers.src.di.DaggerApiComponent
@@ -56,8 +55,8 @@ class ListUserViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun fetchUsersFromRemote() {
-        loading.value = true
+    private fun fetchUsersFromRemote() {
+        loading.postValue(true)
         disposable.add(
             usersService.getUsers(1)
                 .subscribeOn(Schedulers.newThread())
@@ -71,9 +70,8 @@ class ListUserViewModel(application: Application) : ViewModel() {
                     }
 
                     override fun onError(e: Throwable) {
-                        Log.e("SDFWF", e.message.toString())
-                        usersLoadError.value = true
-                        loading.value = false
+                        usersLoadError.postValue(true)
+                        loading.postValue(false)
                     }
 
                 })
@@ -87,11 +85,9 @@ class ListUserViewModel(application: Application) : ViewModel() {
     }
 
     private fun insertUsersFromDatabase(newList: List<UserItem>) {
-        Log.e("DSDSDSsds", newList.toString())
         CoroutineScope(Dispatchers.IO).launch {
             userItemDatabase.userItemDao().removeAllUserItem()
             userItemDatabase.userItemDao().insertAll(newList)
-
             userItemsRetrieved(newList)
         }
     }
@@ -99,7 +95,6 @@ class ListUserViewModel(application: Application) : ViewModel() {
     private fun fetchUsersFromDatabase() {
         CoroutineScope(Dispatchers.IO).launch {
             val userItems = userItemDatabase.userItemDao().getAllUserItems()
-            Log.e("DSDSDS", userItems.toString())
             userItemsRetrieved(userItems)
         }
     }
@@ -107,7 +102,6 @@ class ListUserViewModel(application: Application) : ViewModel() {
     fun fetchFavoriteList() {
         CoroutineScope(Dispatchers.IO).launch {
             val userItems = userItemDatabase.userItemDao().getAllFavoriteUserItems(true)
-            Log.e("DSDSDS", userItems.toString())
             userItemsRetrieved(userItems)
         }
     }

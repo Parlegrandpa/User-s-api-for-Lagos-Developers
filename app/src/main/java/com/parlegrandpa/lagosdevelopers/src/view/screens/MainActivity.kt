@@ -2,27 +2,24 @@ package com.parlegrandpa.lagosdevelopers.src.view.screens
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.parlegrandpa.lagosdevelopers.R
 import com.parlegrandpa.lagosdevelopers.src.data.factory.UserItemViewModelFactory
 import com.parlegrandpa.lagosdevelopers.src.view.adapter.UserListAdapter
 import com.parlegrandpa.lagosdevelopers.src.viewmodel.ListUserViewModel
-import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.favoriteButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var viewModel: ListUserViewModel
     private val usersAdapter = UserListAdapter(this, arrayListOf())
-
-    private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +33,14 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        fetchUsers( false)
+        CoroutineScope(Dispatchers.IO).launch {
+            fetchUsers(false)
+        }
     }
 
-    fun initView() {
-        val modelfactory = UserItemViewModelFactory(application)
-        viewModel = ViewModelProvider(this, modelfactory).get(ListUserViewModel::class.java)
+    private fun initView() {
+        val modelFactory = UserItemViewModelFactory(application)
+        viewModel = ViewModelProvider(this, modelFactory).get(ListUserViewModel::class.java)
 
         usersList.apply {
             layoutManager = LinearLayoutManager(context)
@@ -55,19 +54,21 @@ class MainActivity : AppCompatActivity() {
         observeViewModel()
     }
 
-    fun initSwipeToRefresh() {
+    private fun initSwipeToRefresh() {
         refreshLayout.setOnRefreshListener {
-            fetchUsers(true)
+            CoroutineScope(Dispatchers.IO).launch {
+                fetchUsers(true)
+            }
         }
     }
 
-    fun fetchUsers(forceLoadFromRemote: Boolean) {
+    private fun fetchUsers(forceLoadFromRemote: Boolean) {
         refreshLayout.isRefreshing = false
         viewModel.refresh(forceLoadFromRemote)
     }
 
-    fun observeViewModel() {
-        viewModel.users.observe(this, Observer { users ->
+    private fun observeViewModel() {
+        viewModel.users.observe(this) { users ->
             run {
                 users?.let {
                     if (users.isEmpty()) {
@@ -76,18 +77,19 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         usersList.visibility = View.VISIBLE
                         listError.visibility = View.GONE
-                        usersAdapter.updateUsers(it) }
+                        usersAdapter.updateUsers(it)
                     }
+                }
             }
-        })
+        }
 
-        viewModel.usersLoadError.observe(this, Observer { isError ->
+        viewModel.usersLoadError.observe(this) { isError ->
             run {
                 isError?.let { listError.visibility = if (it) View.VISIBLE else View.GONE }
             }
-        })
+        }
 
-        viewModel.loading.observe(this, Observer { isLoading ->
+        viewModel.loading.observe(this) { isLoading ->
             run {
                 isLoading?.let {
                     loadingView.visibility = if (it) View.VISIBLE else View.GONE
@@ -97,6 +99,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-        })
+        }
     }
 }
