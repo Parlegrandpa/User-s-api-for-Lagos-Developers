@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LagosDevelopers</string>
+    <string name="an_error_occurred_while_fetching_data">An error occurred while fetching data</string>
+    <string name="favorite_list_is_empty">Favorite list is empty</string>
+    <string name="remote_from_favorite">Remove from favorite</string>
+    <string name="add_to_favorite">Add to favorite</string>
+    <string name="dialogTitle">Delete List</string>
+    <string name="dialogMessage">Are you sure you want to delete all favorite list</string>
+</resources>
